@@ -1,0 +1,44 @@
+---
+# EC2NodeClass — tells Karpenter HOW to build the EC2 instances that back
+# the nodes it provisions: AMI family, node role, security groups, subnet
+# discovery, tags, and block device mappings.
+#
+# Reference: https://karpenter.sh/docs/concepts/nodeclasses/
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: default
+spec:
+  # Use the latest EKS-optimized AL2023 AMI for the cluster's Kubernetes version
+  amiFamily: AL2023
+
+  # IAM role attached to every Karpenter-provisioned node.
+  # This matches the role created by Terraform:
+  #   <cluster_name>-karpenter-node-role
+  role: "karpenter-demo-karpenter-node-role"
+
+  # Discover subnets tagged with karpenter.sh/discovery = <cluster-name>
+  # (the VPC module tags private subnets with this value)
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: karpenter-demo
+
+  # Discover security groups tagged with karpenter.sh/discovery = <cluster-name>
+  # The EKS-managed cluster security group is used by default when this is
+  # omitted; keep it simple and let Karpenter pick the cluster SG.
+  securityGroupSelectorTerms:
+    - tags:
+        kubernetes.io/cluster/karpenter-demo: owned
+
+  # Tags applied to every EC2 instance Karpenter launches
+  tags:
+    Team: karpenter-demo
+
+  # 50 GiB gp3 root volume for each node
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 50Gi
+        volumeType: gp3
+        encrypted: true
+        deleteOnTermination: true

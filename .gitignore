@@ -1,0 +1,40 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+.terraform.lock.hcl
+
+# tfvars may contain account-specific values (uncomment to ignore)
+# *.tfvars
+# *.tfvars.json
+
+# Kubernetes / kubeconfig
+kubeconfig
+*.kubeconfig
+*.pem
+*.crt
+*.key
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Claude / opencode
+.claude
+.opencode

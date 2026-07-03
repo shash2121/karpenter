@@ -1,0 +1,55 @@
+---
+# Nginx deployment + service — a real-world workload to demonstrate
+# Karpenter scaling with a stateless web tier.
+#
+# Demo flow:
+#   kubectl apply -f k8s-manifests/
+#   # Start with 1 replica, then scale up:
+#   kubectl scale deployment nginx --replicas=10
+#   kubectl get nodes -w
+#   kubectl get pods -l app=nginx -o wide
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      # Schedule onto Karpenter-provisioned nodes
+      nodeSelector:
+        NodePool: default
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
