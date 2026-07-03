@@ -19,7 +19,7 @@ node_group_name           = "system-node-group"
 node_group_instance_types = ["m7i-flex.large"]
 node_group_desired_size   = 2
 node_group_min_size       = 1
-node_group_max_size       = 3
+node_group_max_size       = 8
 
 # Karpenter Helm chart version (matches Karpenter v1.x line)
 karpenter_chart_version = "1.12.0"

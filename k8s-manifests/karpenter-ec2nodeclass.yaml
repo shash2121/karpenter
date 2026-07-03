@@ -12,6 +12,12 @@ spec:
   # Use the latest EKS-optimized AL2023 AMI for the cluster's Kubernetes version
   amiFamily: AL2023
 
+  # Required in Karpenter v1.x — selects the EKS-optimized AL2023 AMI.
+  # "al2023@latest" always resolves to the newest published AMI for the
+  # cluster's Kubernetes version.
+  amiSelectorTerms:
+    - alias: al2023@latest
+
   # IAM role attached to every Karpenter-provisioned node.
   # This matches the role created by Terraform:
   #   <cluster_name>-karpenter-node-role

@@ -38,9 +38,6 @@ spec:
             - m7i-flex.large
             - c7i-flex.large
 
-      # Expire nodes after 30 days so they get rotated
-      expiryAfter: 720h
-
   # Resource limits cap total spend / node count
   limits:
     cpu: 100
